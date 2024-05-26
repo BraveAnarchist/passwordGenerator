@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+
+    </style>
+</head>
+
+<body>
+
+    <div style="padding:20px">
+        <h1 style="text-align:center;margin-bottom:9vh">Password Generator</h1>
+        <form style="margin-bottom:1vh">
+            <input style="width:95%;height:20px;font-size:larger;padding:3px; border:1px gray
+                solid;margin-bottom:3vh" id="password" type="text" value="" readOnly />
+            <button type="button" class="copy-btn" id="copyBtn"><i class="fa-regular fa-copy"></i></button>
+            <p>Select Password length<b>(**8-50 characters**)</b> <input type="number" id="length" name="length" min="1"
+                    max="128" value="12"></p>
+
+            <br>
+
+            <input type="checkbox" id="uc" value="uc" />
+            <label for="uc">Include upper case</label><br />
+            <input type="checkbox" id="lc" value="lc" />
+            <label for="lc">Include lower case</label><br />
+            <input type="checkbox" id="num" value="num" />
+            <label for="num">Include numbers</label><br style="margin-bottom:100vh">
+            <input type="checkbox" id="sym" value="sym" />
+            <label for="sym">Include symbols</label>
+
+        </form>
+        <div id='btn' style="color:white;background:#0000CC;border-radius:10px;padding:8px">Generate
+            Password</div>
+    </div>
+
+    <script>
+        document.getElementById('btn').addEventListener('click', generatePassword);
+
+        function generatePassword() {
+            const length = document.getElementById('length').value;
+            const includeLowercase = document.getElementById('lc').checked;
+            const includeUppercase = document.getElementById('uc').checked;
+            const includeNumbers = document.getElementById('num').checked;
+            const includeSymbols = document.getElementById('sym').checked;
+
+            const lowercaseChars = 'abcdefghijklmnopqrstuvwxyz';
+            const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const numberChars = '0123456789';
+            const symbolChars = '!@#$%^&*()_+~`|}{[]:;?><,./-=';
+
+            let allChars = '';
+            if (includeLowercase) allChars += lowercaseChars;
+            if (includeUppercase) allChars += uppercaseChars;
+            if (includeNumbers) allChars += numberChars;
+            if (includeSymbols) allChars += symbolChars;
+
+            if (allChars === '') {
+                alert('Please select at least one character type.');
+                return;
+            }
+
+            let password = '';
+            for (let i = 0; i < length; i++) {
+                const randomIndex = Math.floor(Math.random() * allChars.length);
+                password += allChars[randomIndex];
+            }
+
+            document.getElementById('password').value = password;
+        }
+
+        document.getElementById('copyBtn').addEventListener('click', copyPassword);
+
+        function copyPassword() {
+            const passwordField = document.getElementById('password');
+            passwordField.select();
+            passwordField.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(passwordField.value)
+                .then(() => {
+                    alert('Password copied to clipboard!');
+                })
+                .catch(err => {
+                    alert('Failed to copy password!');
+                    console.error('Error:', err);
+                });
+        }
+
+    </script>
+</body>
+
+</html>
